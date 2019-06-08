@@ -3,5 +3,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="resourceLoadService" class="ru.projects.edu.spring.task1.service.ResourceLoadService">
+		<constructor-arg value="csv"/>
+		<constructor-arg value="classpath:test.csv"/>
+	</bean>
+
+
+	<bean id="csvLoadService" class="ru.projects.edu.spring.task1.service.CSVReadServiceImpl">
+		<constructor-arg ref="resourceLoadService"/>
+	</bean>
+
 
 </beans>
