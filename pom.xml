@@ -25,7 +25,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-framework.version>5.1.7.RELEASE</spring-framework.version>
         <junit.jupiter.version>5.4.2</junit.jupiter.version>
-        <opencsv.version>4.6</opencsv.version>
+        <assertj.version>3.11.1</assertj.version>
 
     </properties>
 
@@ -42,10 +42,18 @@
             <version>${junit.jupiter.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>${opencsv.version}</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj.version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>

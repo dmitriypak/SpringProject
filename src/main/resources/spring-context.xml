@@ -8,10 +8,12 @@
 		<constructor-arg value="classpath:test.csv"/>
 	</bean>
 
+	<bean id="testStudentDao" class="ru.projects.edu.spring.task1.dao.TestStudentDAOImpl">
+	</bean>
 
 	<bean id="csvLoadService" class="ru.projects.edu.spring.task1.service.CSVReadServiceImpl">
 		<constructor-arg ref="resourceLoadService"/>
+		<constructor-arg ref="testStudentDao"/>
 	</bean>
-
 
 </beans>

@@ -1,5 +1,7 @@
 package ru.projects.edu.spring.task1.service;
 
+import ru.projects.edu.spring.task1.dao.TestStudentDAOImpl;
+import ru.projects.edu.spring.task1.dao.TestStudentDao;
 import ru.projects.edu.spring.task1.domain.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,13 +12,16 @@ import java.util.Map;
 
 public class CSVReadServiceImpl implements LoadService {
   private ResourceLoadService resourceLoadService;
+  private TestStudentDao testStudentDAO;
 
-  public CSVReadServiceImpl(ResourceLoadService resourceLoadService) {
+  public CSVReadServiceImpl(ResourceLoadService resourceLoadService, TestStudentDao testStudentDao) {
     this.resourceLoadService = resourceLoadService;
+    this.testStudentDAO = testStudentDao;
+    this.loadTest();
   }
 
   @Override
-  public Test getTest() {
+  public void loadTest() {
     //Вопросы теста
     Map<Integer,String> mapQuestions = new LinkedHashMap<>();
     //Ответы теста
@@ -42,6 +47,7 @@ public class CSVReadServiceImpl implements LoadService {
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-    return new Test(mapQuestions,mapAnswers);
+    testStudentDAO.setAnswers(mapAnswers);
+    testStudentDAO.setQuestions(mapQuestions);
   }
 }
