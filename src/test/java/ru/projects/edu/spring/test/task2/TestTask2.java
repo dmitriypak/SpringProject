@@ -4,9 +4,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.projects.edu.spring.task2.Main;
+import ru.projects.edu.spring.task2.config.AppLauncher;
+import ru.projects.edu.spring.task2.config.MessageService;
 import ru.projects.edu.spring.task2.dao.StudentDao;
 import ru.projects.edu.spring.task2.dao.TestDao;
 import ru.projects.edu.spring.task2.service.resourceload.LoadService;
@@ -33,6 +38,14 @@ public class TestTask2 {
   private TestService testService;
   @Autowired
   private TestUtils testUtils;
+  @Autowired
+  private AppLauncher appLauncher;
+  @Autowired
+  private MessageSource messageSource;
+  @Autowired
+  private MessageService messageService;
+  @Autowired
+  private PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer;
 
   @DisplayName("Object ResourceLoadService init")
   @Test
@@ -68,5 +81,29 @@ public class TestTask2 {
   @Test
   public void testObjectTestUtilsInit() {
     assertNotNull(testUtils);
+  }
+
+  @DisplayName("Object AppLauncher init")
+  @Test
+  public void testObjectAppLauncherInit() {
+    assertNotNull(appLauncher);
+  }
+
+  @DisplayName("Object MessageSource init")
+  @Test
+  public void testObjectMessageSourceInit() {
+    assertNotNull(messageSource);
+  }
+
+  @DisplayName("Object MessageService init")
+  @Test
+  public void testObjectMessageServiceInit() {
+    assertNotNull(messageService);
+  }
+
+  @DisplayName("Object PropertySourcesPlaceholderConfigurer init")
+  @Test
+  public void testObjectPropertySourcesPlaceholderConfigurerInit() {
+    assertNotNull(propertySourcesPlaceholderConfigurer);
   }
 }

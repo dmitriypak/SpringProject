@@ -1,7 +1,5 @@
 package ru.projects.edu.spring.task2.dao;
 
-import ru.projects.edu.spring.task2.domain.Test;
-
 import java.util.Map;
 
 public interface TestDao {
