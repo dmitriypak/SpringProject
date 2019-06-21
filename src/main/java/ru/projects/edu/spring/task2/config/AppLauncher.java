@@ -5,6 +5,8 @@ import ru.projects.edu.spring.task2.service.resourceload.LoadService;
 import ru.projects.edu.spring.task2.service.student.StudentService;
 import ru.projects.edu.spring.task2.service.testing.TestService;
 
+import java.io.IOException;
+
 @Service
 public class AppLauncher {
   private final LoadService loadService;
@@ -17,7 +19,7 @@ public class AppLauncher {
     this.studentService = studentService;
   }
 
-  public void start(){
+  public void start() throws IOException {
     loadService.loadTest();
     if(studentService.registerStudent()){
       testService.start();

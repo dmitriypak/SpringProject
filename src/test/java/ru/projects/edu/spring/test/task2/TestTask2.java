@@ -1,29 +1,37 @@
 package ru.projects.edu.spring.test.task2;
 
+import org.junit.BeforeClass;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.projects.edu.spring.task2.Main;
 import ru.projects.edu.spring.task2.config.AppLauncher;
-import ru.projects.edu.spring.task2.config.MessageService;
+import ru.projects.edu.spring.task2.config.MessageServiceConfig;
 import ru.projects.edu.spring.task2.dao.StudentDao;
 import ru.projects.edu.spring.task2.dao.TestDao;
+import ru.projects.edu.spring.task2.domain.Student;
+import ru.projects.edu.spring.task2.service.io.MessageService;
 import ru.projects.edu.spring.task2.service.resourceload.LoadService;
 import ru.projects.edu.spring.task2.service.resourceload.ResourceLoadService;
+import ru.projects.edu.spring.task2.service.student.StudentService;
 import ru.projects.edu.spring.task2.service.testing.TestService;
-import ru.projects.edu.spring.task2.utils.TestUtils;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.BDDMockito.given;
 
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {Main.class})
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@ContextConfiguration(classes = {Main.class, MessageServiceConfig.class})
 
 public class TestTask2 {
   @Autowired
@@ -37,73 +45,30 @@ public class TestTask2 {
   @Autowired
   private TestService testService;
   @Autowired
-  private TestUtils testUtils;
-  @Autowired
   private AppLauncher appLauncher;
   @Autowired
   private MessageSource messageSource;
   @Autowired
   private MessageService messageService;
   @Autowired
+  private StudentService studentService;
+  @Autowired
   private PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer;
 
-  @DisplayName("Object ResourceLoadService init")
-  @Test
-  public void testObjectResourceLoadServiceInit() {
-    assertNotNull(resourceLoadService);
+  @BeforeEach
+  public void init() throws IOException {
+    loadService.loadTest();
   }
 
-  @DisplayName("Object TestDao init")
+  @DisplayName("Load Answers")
   @Test
-  public void testObjectTestDaoInit() {
-    assertNotNull(testDao);
+  public void testLoadAnswers(){
+    Assertions.assertTrue(loadService.getAnswers().size()>0);
   }
 
-  @DisplayName("Object LoadService init")
+  @DisplayName("Load Questions")
   @Test
-  public void testObjectLoadServiceInit() {
-    assertNotNull(loadService);
-  }
-
-  @DisplayName("Object StudentDao init")
-  @Test
-  public void testObjectStudentDaoInit() {
-    assertNotNull(studentDao);
-  }
-
-  @DisplayName("Object TestService init")
-  @Test
-  public void testObjectTestServiceInit() {
-    assertNotNull(testService);
-  }
-
-  @DisplayName("Object TestUtils init")
-  @Test
-  public void testObjectTestUtilsInit() {
-    assertNotNull(testUtils);
-  }
-
-  @DisplayName("Object AppLauncher init")
-  @Test
-  public void testObjectAppLauncherInit() {
-    assertNotNull(appLauncher);
-  }
-
-  @DisplayName("Object MessageSource init")
-  @Test
-  public void testObjectMessageSourceInit() {
-    assertNotNull(messageSource);
-  }
-
-  @DisplayName("Object MessageService init")
-  @Test
-  public void testObjectMessageServiceInit() {
-    assertNotNull(messageService);
-  }
-
-  @DisplayName("Object PropertySourcesPlaceholderConfigurer init")
-  @Test
-  public void testObjectPropertySourcesPlaceholderConfigurerInit() {
-    assertNotNull(propertySourcesPlaceholderConfigurer);
+  public void testLoadQuestions(){
+    Assertions.assertTrue(loadService.getQuestions().size()>0);
   }
 }

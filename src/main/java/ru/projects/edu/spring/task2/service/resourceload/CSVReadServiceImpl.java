@@ -1,12 +1,6 @@
 package ru.projects.edu.spring.task2.service.resourceload;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+
 import org.springframework.core.io.Resource;
-import org.springframework.stereotype.Service;
-import ru.projects.edu.spring.task2.dao.TestDao;
-import ru.projects.edu.spring.task2.dao.TestDaoImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,30 +19,19 @@ public class CSVReadServiceImpl implements LoadService {
   }
 
   @Override
-  public void loadTest() {
-    InputStream is = null;
-    BufferedReader br = null;
-    try {
-      is = resource.getInputStream();
-      br = new BufferedReader(new InputStreamReader(is));
-      String line;
-      while ((line = br.readLine()) != null) {
-        String[]str = line.split(",");
-
-        if(str.length<3)continue;
-
+  public void loadTest() throws IOException {
+    try (InputStream is = resource.getInputStream()) {
+      try(BufferedReader br = new BufferedReader(new InputStreamReader(is))){
+        String line;
         int id = 0;
-        try {
-          id = Integer.parseInt(str[0]);
-        } catch (NumberFormatException ex) {
-          System.out.println("NumberFormatException");
+        while ((line = br.readLine()) != null) {
+          String[] str = line.split(",");
+          if (str.length < 3) continue;
+          id++;
+          mapQuestions.put(Integer.valueOf(id), str[1]);
+          mapAnswers.put(Integer.valueOf(id), str[2]);
         }
-        mapQuestions.put(Integer.valueOf(id),str[1]);
-        mapAnswers.put(Integer.valueOf(id),str[2]);
       }
-      br.close();
-    } catch (IOException ex) {
-      ex.printStackTrace();
     }
   }
 

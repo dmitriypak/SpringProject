@@ -3,12 +3,12 @@ package ru.projects.edu.spring.task2.service.resourceload;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.AbstractFactoryBean;
 import org.springframework.context.ResourceLoaderAware;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.stereotype.Service;
 
 @PropertySource("classpath:application.properties")
-@Service
+@Configuration
 public class ResourceLoadService extends AbstractFactoryBean<LoadService>  implements ResourceLoaderAware {
   private ResourceLoader resourceLoader;
   private final String type;

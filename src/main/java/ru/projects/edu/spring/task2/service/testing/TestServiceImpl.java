@@ -2,18 +2,15 @@ package ru.projects.edu.spring.task2.service.testing;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import ru.projects.edu.spring.task2.config.MessageService;
+
 import ru.projects.edu.spring.task2.dao.StudentDao;
 import ru.projects.edu.spring.task2.dao.TestDao;
 import ru.projects.edu.spring.task2.domain.Student;
-import ru.projects.edu.spring.task2.service.student.StudentService;
-import ru.projects.edu.spring.task2.utils.TestUtils;
+import ru.projects.edu.spring.task2.service.io.MessageService;
 
 import java.util.Map;
-import java.util.Scanner;
+import java.util.function.Predicate;
 
 @Service
 @Qualifier("testService")
@@ -23,15 +20,13 @@ public class TestServiceImpl implements TestService{
   private final TestDao testDao;
   private final StudentDao studentDao;
   private Student student;
-  private final MessageSource messageSource;
-  private final MessageService messageService;
+  private final MessageService ms;
 
   @Autowired
-  public TestServiceImpl(TestDao testDao, StudentDao studentDao, MessageService messageService, MessageSource messageSource){
+  public TestServiceImpl(TestDao testDao, StudentDao studentDao, MessageService messageService){
     this.testDao = testDao;
     this.studentDao = studentDao;
-    this.messageService = messageService;
-    this.messageSource = messageSource;
+    ms = messageService;
   }
 
   @Override
@@ -41,30 +36,27 @@ public class TestServiceImpl implements TestService{
     answersTestMap = testDao.getAnswers();
     String line = null;
     for(Map.Entry<Integer,String>question:questionsTestMap.entrySet()){
-      line = TestUtils.getInputText(String.format("- %s %d: %s", messageSource.getMessage("question",null,MessageService.locale),
-          question.getKey(),question.getValue()));
-      if(line.equalsIgnoreCase(answersTestMap.get(question.getKey()))) {
-        System.out.println(messageSource.getMessage("correct_answer",null,MessageService.locale));
+      int key = question.getKey();
+      line = ms.getInputText(String.format("- %s %d: %s", ms.getMessage("question"),
+          key,question.getValue()));
+      if(line.equalsIgnoreCase(answersTestMap.get(key))) {
+        ms.print(ms.getMessage("correct_answer"));
         student.upValidCount();
       }else{
-        System.out.println(String.format("- %s, %s: %s",messageSource.getMessage("incorrect_answer",null,MessageService.locale),
-            messageSource.getMessage("correct_answer",null,MessageService.locale),
-            answersTestMap.get(question.getKey())));
+        ms.print(String.format("- %s, %s: %s",ms.getMessage("incorrect_answer"),
+            ms.getMessage("correct_answer"), answersTestMap.get(key)));
         student.upNonValidCount();
       }
     }
 
-    System.out.println(String.format("%s %s %s: ",messageSource.getMessage("test_result",null,MessageService.locale),
+    ms.print(String.format("%s %s %s: ",ms.getMessage("test_result"),
         student.getName(),student.getFamily()));
-    System.out.println(String.format("%s: %d",messageSource.getMessage("count_correct_answers",null,MessageService.locale),
+    ms.print(String.format("%s: %d",ms.getMessage("count_correct_answers"),
         student.getValidCount()));
-    System.out.println(String.format("%s: %d",messageSource.getMessage("count_incorrect_answers",null,MessageService.locale),
+    ms.print(String.format("%s: %d",ms.getMessage("count_incorrect_answers"),
         student.getNonValidCount()));
     String testPass = student.isTestPass()?"test_pass":"test_not_passed";
-    System.out.println(String.format("%s",messageSource.getMessage(testPass,null,MessageService.locale)));
+    ms.print(String.format("%s",ms.getMessage(testPass)));
   }
 
-  public void getTest() {
-
-  }
 }
