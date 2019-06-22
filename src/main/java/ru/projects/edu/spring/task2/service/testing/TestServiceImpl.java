@@ -18,28 +18,26 @@ public class TestServiceImpl implements TestService{
   private Map<Integer,String> questionsTestMap;
   private Map<Integer,String> answersTestMap;
   private final TestDao testDao;
-  private final StudentDao studentDao;
   private Student student;
   private final MessageService ms;
+  private final ValidateService vs;
 
-  @Autowired
-  public TestServiceImpl(TestDao testDao, StudentDao studentDao, MessageService messageService){
+  public TestServiceImpl(TestDao testDao, MessageService messageService, ValidateService validateService){
     this.testDao = testDao;
-    this.studentDao = studentDao;
     ms = messageService;
+    vs = validateService;
   }
 
   @Override
-  public void start() {
-    student = studentDao.getStudent();
+  public void start(Student student) {
+    if(student==null) ms.print("Студент не зарегистрирован");
     questionsTestMap = testDao.getQuestions();
     answersTestMap = testDao.getAnswers();
-    String line = null;
+    String answer = null;
     for(Map.Entry<Integer,String>question:questionsTestMap.entrySet()){
       int key = question.getKey();
-      line = ms.getInputText(String.format("- %s %d: %s", ms.getMessage("question"),
-          key,question.getValue()));
-      if(line.equalsIgnoreCase(answersTestMap.get(key))) {
+      answer = ms.getInputText(String.format("- %s %d: %s", ms.getMessage("question"),key,question.getValue()));
+      if(vs.validate(key,answer)) {
         ms.print(ms.getMessage("correct_answer"));
         student.upValidCount();
       }else{

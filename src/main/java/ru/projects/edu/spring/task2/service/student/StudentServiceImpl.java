@@ -20,8 +20,8 @@ public class StudentServiceImpl implements StudentService{
 
   @Override
   public boolean registerStudent() {
-    String name = messageService.getInputText(messageService.getMessage("name"));
-    String family = messageService.getInputText(messageService.getMessage("family"));
+    String name = messageService.getInputText(String.format("%s:",messageService.getMessage("name")));
+    String family = messageService.getInputText(String.format("%s:",messageService.getMessage("family")));
     student = new Student(name,family);
     studentDao.setStudent(student);
     return student!=null ? true:false;
