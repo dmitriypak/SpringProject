@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface LoadService {
-  void loadTest() throws IOException;
+  boolean loadTest() throws IOException;
   Map<Integer,String>getQuestions();
   Map<Integer,String>getAnswers();
 }

@@ -19,20 +19,21 @@ public class CSVReadServiceImpl implements LoadService {
   }
 
   @Override
-  public void loadTest() throws IOException {
+  public boolean loadTest() throws IOException {
     try (InputStream is = resource.getInputStream()) {
       try(BufferedReader br = new BufferedReader(new InputStreamReader(is))){
         String line;
         int id = 0;
         while ((line = br.readLine()) != null) {
           String[] str = line.split(",");
-          if (str.length < 3) continue;
+          if (str.length < 2) continue;
           id++;
-          mapQuestions.put(Integer.valueOf(id), str[1]);
-          mapAnswers.put(Integer.valueOf(id), str[2]);
+          mapQuestions.put(Integer.valueOf(id), str[0]);
+          mapAnswers.put(Integer.valueOf(id), str[1]);
         }
       }
     }
+    return mapQuestions.size()>0 && mapAnswers.size()>0 ? true:false;
   }
 
   @Override

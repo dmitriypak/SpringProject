@@ -23,8 +23,7 @@ public class AppLauncher {
   }
 
   public void start() throws IOException {
-    loadService.loadTest();
-    if(studentService.registerStudent()){
+    if(studentService.registerStudent() && loadService.loadTest()){
       testService.start(studentDao.getStudent());
     }
   }
