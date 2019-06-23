@@ -1,20 +1,20 @@
 package ru.projects.edu.spring.task2.service.resourceload;
 
 import org.springframework.core.io.Resource;
+import ru.projects.edu.spring.task2.domain.Question;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-public class CSVReadServiceImpl implements LoadService {
+public class TestLoaderImpl implements TestLoader {
   private final Resource resource;
-  private final Map<Integer,String> mapQuestions = new LinkedHashMap<>();
-  private final Map<Integer,String> mapAnswers = new LinkedHashMap<>();
+  private final List<Question> listQuestions = new ArrayList<>();
 
-  public CSVReadServiceImpl(Resource resource) {
+  public TestLoaderImpl(Resource resource) {
     this.resource = resource;
   }
 
@@ -23,26 +23,19 @@ public class CSVReadServiceImpl implements LoadService {
     try (InputStream is = resource.getInputStream()) {
       try(BufferedReader br = new BufferedReader(new InputStreamReader(is))){
         String line;
-        int id = 0;
         while ((line = br.readLine()) != null) {
           String[] str = line.split(",");
           if (str.length < 2) continue;
-          id++;
-          mapQuestions.put(Integer.valueOf(id), str[0]);
-          mapAnswers.put(Integer.valueOf(id), str[1]);
+          listQuestions.add(new Question(str[0],str[1]));
         }
       }
     }
-    return mapQuestions.size()>0 && mapAnswers.size()>0 ? true:false;
+    return listQuestions.size()>0 ? true:false;
   }
 
   @Override
-  public Map<Integer, String> getQuestions() {
-    return mapQuestions;
+  public List<Question> getQuestions() {
+    return listQuestions;
   }
 
-  @Override
-  public Map<Integer, String> getAnswers() {
-    return mapAnswers;
-  }
 }

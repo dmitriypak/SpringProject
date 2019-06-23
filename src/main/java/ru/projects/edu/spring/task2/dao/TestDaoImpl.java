@@ -2,42 +2,29 @@ package ru.projects.edu.spring.task2.dao;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
-import ru.projects.edu.spring.task2.service.resourceload.LoadService;
+import ru.projects.edu.spring.task2.domain.Question;
+import ru.projects.edu.spring.task2.domain.Test;
+import ru.projects.edu.spring.task2.service.resourceload.TestLoader;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 
 @Repository
 @Qualifier("testDao")
 public class TestDaoImpl implements TestDao {
-  private final LoadService loadService;
-  private Map<Integer,String> mapQuestions;
-  private Map<Integer,String> mapAnswers;
+  private final TestLoader testLoader;
+  private List<Question> listQuestions;
+  private final StudentDao studentDao;
 
-  public TestDaoImpl(LoadService loadService) {
-    this.loadService = loadService;
-    this.mapQuestions = loadService.getQuestions();
-    this.mapAnswers = loadService.getAnswers();
+  public TestDaoImpl(TestLoader testLoader,StudentDao studentDao) {
+    this.testLoader = testLoader;
+    this.listQuestions = testLoader.getQuestions();
+    this.studentDao = studentDao;
   }
 
-  @Override
-  public Map<Integer, String> getQuestions() {
-    return mapQuestions;
-  }
 
   @Override
-  public Map<Integer, String> getAnswers() {
-    return mapAnswers;
-  }
-
-  @Override
-  public void setQuestions(Map<Integer, String> mapQuestions) {
-
-  }
-
-  @Override
-  public void setAnswers(Map<Integer, String> mapAnswers) {
-
+  public Test getTest() {
+    return new Test(studentDao.getStudent(),listQuestions);
   }
 
 

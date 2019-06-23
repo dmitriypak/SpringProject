@@ -3,7 +3,6 @@ package ru.projects.edu.spring.task2.service.student;
 import org.springframework.stereotype.Service;
 import ru.projects.edu.spring.task2.dao.StudentDao;
 import ru.projects.edu.spring.task2.domain.Student;
-import ru.projects.edu.spring.task2.service.io.IOService;
 import ru.projects.edu.spring.task2.service.io.MessageService;
 
 @Service

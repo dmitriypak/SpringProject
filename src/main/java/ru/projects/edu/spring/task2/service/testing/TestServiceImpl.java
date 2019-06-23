@@ -1,48 +1,49 @@
 package ru.projects.edu.spring.task2.service.testing;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import ru.projects.edu.spring.task2.dao.StudentDao;
-import ru.projects.edu.spring.task2.dao.TestDao;
+import ru.projects.edu.spring.task2.domain.Question;
 import ru.projects.edu.spring.task2.domain.Student;
+import ru.projects.edu.spring.task2.domain.Test;
 import ru.projects.edu.spring.task2.service.io.MessageService;
-
-import java.util.Map;
-import java.util.function.Predicate;
+import java.util.List;
 
 @Service
 @Qualifier("testService")
 public class TestServiceImpl implements TestService{
-  private Map<Integer,String> questionsTestMap;
-  private Map<Integer,String> answersTestMap;
-  private final TestDao testDao;
+  private List<Question> listQuestions;
   private Student student;
   private final MessageService ms;
   private final ValidateService vs;
 
-  public TestServiceImpl(TestDao testDao, MessageService messageService, ValidateService validateService){
-    this.testDao = testDao;
+  public TestServiceImpl(MessageService messageService, ValidateService validateService){
     ms = messageService;
     vs = validateService;
   }
 
   @Override
-  public void start(Student student) {
-    if(student==null) ms.print("Студент не зарегистрирован");
-    questionsTestMap = testDao.getQuestions();
-    answersTestMap = testDao.getAnswers();
-    String answer = null;
-    for(Map.Entry<Integer,String>question:questionsTestMap.entrySet()){
-      int key = question.getKey();
-      answer = ms.getInputText(String.format("- %s %d: %s", ms.getMessage("question"),key,question.getValue()));
-      if(vs.validate(key,answer)) {
+  public void start(Test test) {
+    student = test.getStudent();
+    if(student==null){
+      ms.print("Студент не зарегистрирован");
+      return;
+    }
+
+    listQuestions = test.getQuestionsList();
+    if(listQuestions.size()==0){
+      ms.print("Тест не загружен");
+      return;
+    }
+
+    for(int i = 0;i<listQuestions.size();i++){
+      Question question = listQuestions.get(i);
+      question.setInputText(ms.getInputText(String.format("- %s %d: %s", ms.getMessage("question"),i+1,question.getQuestion())));
+      if(vs.test(question)) {
         ms.print(ms.getMessage("correct_answer"));
         student.upValidCount();
       }else{
         ms.print(String.format("- %s, %s: %s",ms.getMessage("incorrect_answer"),
-            ms.getMessage("correct_answer"), answersTestMap.get(key)));
+            ms.getMessage("correct_answer"), question.getAnswer()));
         student.upNonValidCount();
       }
     }

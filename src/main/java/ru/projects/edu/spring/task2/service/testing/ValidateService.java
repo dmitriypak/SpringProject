@@ -1,22 +1,15 @@
 package ru.projects.edu.spring.task2.service.testing;
 
 import org.springframework.stereotype.Service;
-import ru.projects.edu.spring.task2.dao.TestDao;
-
-import java.util.Map;
-
+import ru.projects.edu.spring.task2.domain.Question;
+import java.util.function.Predicate;
 
 @Service
-public class ValidateService {
-  private final TestDao testDao;
-  private Map<Integer,String> mapCorrectAnswers;
+public class ValidateService implements Predicate<Question> {
 
-  public ValidateService(TestDao testDao) {
-    this.testDao = testDao;
-    mapCorrectAnswers = testDao.getAnswers();
-  }
-
-  public boolean validate(int key, String answer){
-    return answer!= null && !answer.isEmpty() && answer.equalsIgnoreCase(mapCorrectAnswers.get(key));
+  @Override
+  public boolean test(Question question) {
+    String inputText = question.getInputText();
+    return inputText!=null && !inputText.isEmpty() && inputText.equalsIgnoreCase(question.getAnswer());
   }
 }

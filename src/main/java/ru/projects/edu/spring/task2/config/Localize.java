@@ -10,9 +10,11 @@ import java.util.Locale;
 @Component
 public class Localize {
   private Locale locale;
+  private final String path;
 
-  public Localize(@Value("${app.locale}") String locale) {
+  public Localize(@Value("${app.locale}") String locale,@Value("#{'${app.locale}' eq 'ru' ? '${resource.path}' : '${resource.path_en}'}") String path) {
     this.locale = new Locale(locale);
+    this.path = path;
   }
 
   public Locale getLocale() {
@@ -21,5 +23,9 @@ public class Localize {
 
   public void setLocale(Locale locale) {
     this.locale = locale;
+  }
+
+  public String getPath() {
+    return path;
   }
 }
